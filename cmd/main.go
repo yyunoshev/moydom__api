@@ -42,6 +42,11 @@ func main() {
 	router.PATCH("/admin/microdistricts/:id", authMiddleware.CheckAuth(), filtersHandler.UpdateMicrodistrict)
 	router.DELETE("/admin/microdistricts/:id", authMiddleware.CheckAuth(), filtersHandler.DeleteMicrodistrict)
 
+	router.GET("/admin/regions", authMiddleware.CheckAuth(), filtersHandler.GetRegions)
+	router.POST("/admin/regions", authMiddleware.CheckAuth(), filtersHandler.AddRegion)
+	router.PATCH("/admin/regions/:id", authMiddleware.CheckAuth(), filtersHandler.UpdateRegion)
+	router.DELETE("/admin/regions/:id", authMiddleware.CheckAuth(), filtersHandler.DeleteRegion)
+
 	err := router.Run(cfg.ServerPort)
 	if err != nil {
 		log.Fatalf("fail to start server: %v", err)

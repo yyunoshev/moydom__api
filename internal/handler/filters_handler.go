@@ -129,3 +129,60 @@ func (h *FiltersHandler) DeleteMicrodistrict(c *gin.Context) {
 	}
 	c.JSON(http.StatusNoContent, gin.H{})
 }
+
+// Regions
+
+func (h *FiltersHandler) GetRegions(c *gin.Context) {
+	regions, err := h.filtersService.GetRegions()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": regions})
+}
+
+func (h *FiltersHandler) AddRegion(c *gin.Context) {
+	var input domain.FilterRegion
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+	if region, err := h.filtersService.AddRegion(input); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	} else {
+		c.JSON(http.StatusCreated, gin.H{"data": region})
+	}
+}
+
+func (h *FiltersHandler) UpdateRegion(c *gin.Context) {
+	regionID := c.Param("id")
+	id, err := strconv.Atoi(regionID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID format"})
+		return
+	}
+	var input domain.FilterRegion
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+	if region, err := h.filtersService.UpdateRegion(id, input.Name); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"data": region})
+	}
+}
+
+func (h *FiltersHandler) DeleteRegion(c *gin.Context) {
+	regionID := c.Param("id")
+	id, err := strconv.Atoi(regionID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID format"})
+		return
+	}
+	if err := h.filtersService.DeleteRegion(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+	}
+	c.JSON(http.StatusNoContent, gin.H{})
+}

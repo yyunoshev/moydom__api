@@ -92,3 +92,43 @@ func (r *FiltersRepository) DeleteMicrodistrict(id int) error {
 	}
 	return nil
 }
+
+// Regions
+
+func (r *FiltersRepository) GetRegions() ([]domain.FilterRegion, error) {
+	var regions []domain.FilterRegion
+	if err := r.db.Find(&regions).Error; err != nil {
+		return nil, err
+	}
+	return regions, nil
+}
+
+func (r *FiltersRepository) AddRegion(region domain.FilterRegion) (domain.FilterRegion, error) {
+	if err := r.db.Create(&region).Error; err != nil {
+		return domain.FilterRegion{}, err
+	}
+	return region, nil
+}
+
+func (r *FiltersRepository) UpdateRegion(id int, newName string) (domain.FilterRegion, error) {
+	var region domain.FilterRegion
+	result := r.db.Model(&region).Where("id = ?", id).Update("name", newName)
+	if result.Error != nil {
+		return domain.FilterRegion{}, result.Error
+	}
+	if result.RowsAffected == 0 {
+		return domain.FilterRegion{}, gorm.ErrRecordNotFound
+	}
+	return region, nil
+}
+
+func (r *FiltersRepository) DeleteRegion(id int) error {
+	result := r.db.Where("id = ?", id).Delete(&domain.FilterRegion{})
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+	return nil
+}

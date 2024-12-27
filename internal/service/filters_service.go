@@ -47,3 +47,22 @@ func (s *FiltersService) UpdateMicrodistrict(id int, newName string) (domain.Fil
 func (s *FiltersService) DeleteMicrodistrict(id int) error {
 	return s.filtersRepo.DeleteMicrodistrict(id)
 }
+
+// Regions
+
+func (s *FiltersService) GetRegions() ([]domain.FilterRegion, error) {
+	return s.filtersRepo.GetRegions()
+}
+
+func (s *FiltersService) AddRegion(input domain.FilterRegion) (domain.FilterRegion, error) {
+	// Можно как-то провалидировать
+	return s.filtersRepo.AddRegion(input)
+}
+
+func (s *FiltersService) UpdateRegion(id int, newName string) (domain.FilterRegion, error) {
+	return s.filtersRepo.UpdateRegion(id, newName)
+}
+
+func (s *FiltersService) DeleteRegion(id int) error {
+	return s.filtersRepo.DeleteRegion(id)
+}
