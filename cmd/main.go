@@ -22,6 +22,7 @@ func main() {
 	db := database.Connect(cfg.DatabaseURL)
 
 	propertyHandler := factory.InitPropertyModule(db)
+	filtersHandler := factory.InitFiltersModule(db)
 	userHandler, authMiddleware := factory.InitUserModule(db)
 
 	router := gin.Default()
@@ -30,6 +31,17 @@ func main() {
 	router.POST("/auth/signup", userHandler.CreateUser)
 	router.POST("/auth/login", userHandler.Login)
 	router.GET("/user/profile", authMiddleware.CheckAuth(), userHandler.GetUserProfile)
+
+	router.GET("/admin/districts", authMiddleware.CheckAuth(), filtersHandler.GetDistricts)
+	router.POST("/admin/districts", authMiddleware.CheckAuth(), filtersHandler.AddDistrict)
+	router.PATCH("/admin/districts/:id", authMiddleware.CheckAuth(), filtersHandler.UpdateDistrict)
+	router.DELETE("/admin/districts/:id", authMiddleware.CheckAuth(), filtersHandler.DeleteDistrict)
+
+	router.GET("/admin/microdistricts", authMiddleware.CheckAuth(), filtersHandler.GetMicrodistricts)
+	router.POST("/admin/microdistricts", authMiddleware.CheckAuth(), filtersHandler.AddMicrodistrict)
+	router.PATCH("/admin/microdistricts/:id", authMiddleware.CheckAuth(), filtersHandler.UpdateMicrodistrict)
+	router.DELETE("/admin/microdistricts/:id", authMiddleware.CheckAuth(), filtersHandler.DeleteMicrodistrict)
+
 	err := router.Run(cfg.ServerPort)
 	if err != nil {
 		log.Fatalf("fail to start server: %v", err)

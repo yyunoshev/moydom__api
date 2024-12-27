@@ -19,3 +19,9 @@ func InitUserModule(db *gorm.DB) (*handler.UserHandler, *middleware.AuthMiddlewa
 	userService := service.NewUserService(userRepo)
 	return handler.NewUserHandler(userService), middleware.NewAuthMiddleware(*userService)
 }
+
+func InitFiltersModule(db *gorm.DB) *handler.FiltersHandler {
+	filtersRepo := repository.NewFiltersRepository(db)
+	filtersService := service.NewFiltersService(filtersRepo)
+	return handler.NewFiltersHandler(filtersService)
+}
