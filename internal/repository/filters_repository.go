@@ -132,3 +132,43 @@ func (r *FiltersRepository) DeleteRegion(id int) error {
 	}
 	return nil
 }
+
+// PropertyCategories
+
+func (r *FiltersRepository) GetPropertyCategories() ([]domain.FilterPropertyCategory, error) {
+	var categories []domain.FilterPropertyCategory
+	if err := r.db.Find(&categories).Error; err != nil {
+		return nil, err
+	}
+	return categories, nil
+}
+
+func (r *FiltersRepository) AddPropertyCategory(propertyCategory domain.FilterPropertyCategory) (domain.FilterPropertyCategory, error) {
+	if err := r.db.Create(&propertyCategory).Error; err != nil {
+		return domain.FilterPropertyCategory{}, err
+	}
+	return propertyCategory, nil
+}
+
+func (r *FiltersRepository) UpdatePropertyCategory(id int, newName string) (domain.FilterPropertyCategory, error) {
+	var propertyCategory domain.FilterPropertyCategory
+	result := r.db.Model(&propertyCategory).Where("id = ?", id).Update("name", newName)
+	if result.Error != nil {
+		return domain.FilterPropertyCategory{}, result.Error
+	}
+	if result.RowsAffected == 0 {
+		return domain.FilterPropertyCategory{}, gorm.ErrRecordNotFound
+	}
+	return propertyCategory, nil
+}
+
+func (r *FiltersRepository) DeletePropertyCategory(id int) error {
+	result := r.db.Where("id = ?", id).Delete(&domain.FilterPropertyCategory{})
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+	return nil
+}

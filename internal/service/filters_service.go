@@ -66,3 +66,22 @@ func (s *FiltersService) UpdateRegion(id int, newName string) (domain.FilterRegi
 func (s *FiltersService) DeleteRegion(id int) error {
 	return s.filtersRepo.DeleteRegion(id)
 }
+
+// PropertyCategory
+
+func (s *FiltersService) GetPropertyCategories() ([]domain.FilterPropertyCategory, error) {
+	return s.filtersRepo.GetPropertyCategories()
+}
+
+func (s *FiltersService) AddPropertyCategory(input domain.FilterPropertyCategory) (domain.FilterPropertyCategory, error) {
+	// Можно как-то провалидировать
+	return s.filtersRepo.AddPropertyCategory(input)
+}
+
+func (s *FiltersService) UpdatePropertyCategory(id int, newName string) (domain.FilterPropertyCategory, error) {
+	return s.filtersRepo.UpdatePropertyCategory(id, newName)
+}
+
+func (s *FiltersService) DeletePropertyCategory(id int) error {
+	return s.filtersRepo.DeleteRegion(id)
+}

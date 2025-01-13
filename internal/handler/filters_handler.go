@@ -186,3 +186,60 @@ func (h *FiltersHandler) DeleteRegion(c *gin.Context) {
 	}
 	c.JSON(http.StatusNoContent, gin.H{})
 }
+
+// PropertyCategories
+
+func (h *FiltersHandler) GetPropertyCategories(c *gin.Context) {
+	categories, err := h.filtersService.GetPropertyCategories()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": categories})
+}
+
+func (h *FiltersHandler) AddPropertyCategory(c *gin.Context) {
+	var input domain.FilterPropertyCategory
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+	if category, err := h.filtersService.AddPropertyCategory(input); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	} else {
+		c.JSON(http.StatusCreated, gin.H{"data": category})
+	}
+}
+
+func (h *FiltersHandler) UpdatePropertyCategory(c *gin.Context) {
+	categoryID := c.Param("id")
+	id, err := strconv.Atoi(categoryID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID format"})
+		return
+	}
+	var input domain.FilterPropertyCategory
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+	if category, err := h.filtersService.UpdatePropertyCategory(id, input.Name); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"data": category})
+	}
+}
+
+func (h *FiltersHandler) DeletePropertyCategory(c *gin.Context) {
+	categoryID := c.Param("id")
+	id, err := strconv.Atoi(categoryID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID format"})
+		return
+	}
+	if err := h.filtersService.DeletePropertyCategory(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+	}
+	c.JSON(http.StatusNoContent, gin.H{})
+}

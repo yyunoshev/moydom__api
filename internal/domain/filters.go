@@ -15,6 +15,11 @@ type FilterRegion struct {
 	Name string `json:"name"`
 }
 
+type FilterPropertyCategory struct {
+	ID   uint   `json:"id" gorm:"primary_key;AUTO_INCREMENT"`
+	Name string `json:"name"`
+}
+
 type FiltersRepository interface {
 	GetDistricts() ([]FilterDistrict, error)
 	AddDistrict(input FilterDistrict) (FilterDistrict, error)
@@ -30,4 +35,9 @@ type FiltersRepository interface {
 	AddRegion(input FilterRegion) (FilterRegion, error)
 	UpdateRegion(id int, newName string) (FilterRegion, error)
 	DeleteRegion(id int) error
+
+	GetPropertyCategories() ([]FilterPropertyCategory, error)
+	AddPropertyCategory(input FilterPropertyCategory) (FilterPropertyCategory, error)
+	UpdatePropertyCategory(id int, newName string) (FilterPropertyCategory, error)
+	DeletePropertyCategory(id int) error
 }

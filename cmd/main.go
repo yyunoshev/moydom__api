@@ -47,6 +47,11 @@ func main() {
 	router.PATCH("/admin/regions/:id", authMiddleware.CheckAuth(), filtersHandler.UpdateRegion)
 	router.DELETE("/admin/regions/:id", authMiddleware.CheckAuth(), filtersHandler.DeleteRegion)
 
+	router.GET("/admin/categories", authMiddleware.CheckAuth(), filtersHandler.GetPropertyCategories)
+	router.POST("/admin/categories", authMiddleware.CheckAuth(), filtersHandler.AddPropertyCategory)
+	router.PATCH("/admin/categories/:id", authMiddleware.CheckAuth(), filtersHandler.UpdatePropertyCategory)
+	router.DELETE("/admin/categories/:id", authMiddleware.CheckAuth(), filtersHandler.DeletePropertyCategory)
+
 	err := router.Run(cfg.ServerPort)
 	if err != nil {
 		log.Fatalf("fail to start server: %v", err)
